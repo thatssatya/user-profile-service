@@ -5,6 +5,7 @@ import com.example.user.profile.model.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -18,6 +19,13 @@ public class RestControllerExceptionAdvice {
         return ResponseEntity
                 .status(getStatus(exception))
                 .body(ErrorResponse.from(exception.getError().getErrorCode(), exception.getError().getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ErrorResponse.badRequest());
     }
 
     @ExceptionHandler(Exception.class)
