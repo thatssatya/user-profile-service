@@ -3,13 +3,14 @@ package com.example.user.profile.temporal.impl;
 import com.example.user.profile.temporal.TemporalClient;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
-import io.temporal.serviceclient.WorkflowServiceStubs;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class BaseTemporalClient implements TemporalClient {
-    private static final WorkflowServiceStubs serviceStubs = WorkflowServiceStubs.newLocalServiceStubs();
-    private static final WorkflowClient workflowClient = WorkflowClient.newInstance(serviceStubs);
+
+    private final WorkflowClient workflowClient;
 
     @Override
     public WorkflowClient getInstance() {

@@ -72,7 +72,7 @@ public abstract class BaseMongoDao<K, V> implements MongoDao<K, V> {
     }
 
     private MongoCollection<Document> getCollection(String collectionName) {
-        return mongoClient.getDatabase(mongoConfig.getDatabaseName()).getCollection(collectionName);
+        return mongoClient.getDatabase(mongoConfig.getDatabase()).getCollection(collectionName);
     }
 
 //    public static void main(String[] args) {
