@@ -1,9 +1,7 @@
 package com.example.user.profile.model.response;
 
 import com.example.user.profile.model.Error;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -34,6 +32,10 @@ public class ErrorResponse implements Serializable {
 
     public static ErrorResponse internalServerError() {
         return from(Error.INTERNAL_SERVER_ERROR);
+    }
+
+    public static ErrorResponse badRequest() {
+        return from(Error.BAD_REQUEST);
     }
 
 }
