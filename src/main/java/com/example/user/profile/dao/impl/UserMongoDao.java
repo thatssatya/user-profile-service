@@ -1,6 +1,6 @@
 package com.example.user.profile.dao.impl;
 
-import com.example.user.profile.config.MongoConfig;
+import com.example.user.profile.dao.config.MongoConfig;
 import com.example.user.profile.dao.entity.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;

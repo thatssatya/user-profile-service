@@ -1,7 +1,7 @@
 package com.example.user.profile.dao.impl;
 
-import com.example.user.profile.config.MongoConfig;
 import com.example.user.profile.dao.MongoDao;
+import com.example.user.profile.dao.config.MongoConfig;
 import com.example.user.profile.dao.request.MongoBaseRequest;
 import com.example.user.profile.dao.request.MongoInsertOrUpdateRequest;
 import com.example.user.profile.exception.UserProfileException;
@@ -15,17 +15,29 @@ import com.mongodb.client.model.Filters;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
+import java.util.Objects;
+
 @Slf4j
 public abstract class BaseMongoDao<K, V> implements MongoDao<K, V> {
     private final Class<V> vClass;
     private final MongoConfig mongoConfig;
-    private final MongoClient mongoClient;
+    private static MongoClient mongoClient = null;
 
     protected BaseMongoDao(Class<V> vClass, MongoConfig mongoConfig) {
         this.vClass = vClass;
         this.mongoConfig = mongoConfig;
-        mongoClient = MongoClients.create(mongoConfig.getConnectionString());
-        log.info("Mongo initialized!");
+    }
+
+    private MongoClient mongoClient() {
+        if (Objects.isNull(mongoClient)) {
+            synchronized (BaseMongoDao.class) {
+                if (Objects.isNull(mongoClient)) {
+                    mongoClient = MongoClients.create(mongoConfig.getConnectionString());
+                    log.info("Mongo initialized!");
+                }
+            }
+        }
+        return mongoClient;
     }
 
     @Override
@@ -68,25 +80,11 @@ public abstract class BaseMongoDao<K, V> implements MongoDao<K, V> {
 
     @Override
     public void close() {
-        mongoClient.close();
+        mongoClient().close();
     }
 
     private MongoCollection<Document> getCollection(String collectionName) {
-        return mongoClient.getDatabase(mongoConfig.getDatabase()).getCollection(collectionName);
+        return mongoClient().getDatabase(mongoConfig.getDatabase()).getCollection(collectionName);
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            var dao = new BaseMongoDao(vClass, new MongoConfigImpl());
-//            var collection = dao.getCollection("user_for_fun");
-////            var db = mongoClient.getDatabase("users_for_fun");
-////            db.runCommand(new Document("ping", 1));
-////            log.info("Pinged your deployment. You successfully connected to MongoDB!");
-//            dao.close();
-//        } catch (MongoException exception) {
-//            log.error("Mongo Exception: {}", exception.getMessage());
-//        } catch (Exception exception) {
-//            log.error("Exception: {}", exception.getMessage());
-//        }
-//    }
 }

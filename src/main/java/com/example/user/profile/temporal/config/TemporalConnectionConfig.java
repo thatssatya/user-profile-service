@@ -1,4 +1,4 @@
-package com.example.user.profile.config;
+package com.example.user.profile.temporal.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.temporal.client.WorkflowClient;

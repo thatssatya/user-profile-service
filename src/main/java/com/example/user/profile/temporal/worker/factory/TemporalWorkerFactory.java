@@ -4,6 +4,8 @@ import com.example.user.profile.temporal.worker.Worker;
 import com.example.user.profile.temporal.worker.impl.AbstractTemporalWorker;
 import io.temporal.worker.WorkerFactory;
 import io.temporal.worker.WorkerOptions;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -11,19 +13,18 @@ import java.util.Map;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TemporalWorkerFactory {
     private final Map<String, AbstractTemporalWorker> temporalWorkerMap;
+    private final WorkerFactory factory;
 
-    public TemporalWorkerFactory(Map<String, AbstractTemporalWorker> temporalWorkerMap, WorkerFactory factory) {
-        this.temporalWorkerMap = temporalWorkerMap;
+    @PostConstruct
+    private void init() {
         addWorkersToFactory(temporalWorkerMap, factory);
-        startFactory(factory);
     }
 
     private static void addWorkersToFactory(Map<String, AbstractTemporalWorker> temporalWorkerMap, WorkerFactory factory) {
-        temporalWorkerMap.values().forEach(worker -> {
-            addWorkerToFactory(factory, worker);
-        });
+        temporalWorkerMap.values().forEach(worker -> addWorkerToFactory(factory, worker));
     }
 
     private static void addWorkerToFactory(WorkerFactory factory, AbstractTemporalWorker worker) {
@@ -35,12 +36,15 @@ public class TemporalWorkerFactory {
         log.info("{} added to factory", worker.getClass().getName());
     }
 
-    private static void startFactory(WorkerFactory factory) {
-        factory.start();
-        log.info("Factory started!");
+    private static synchronized void startFactoryIfNot(WorkerFactory factory) {
+        if (!factory.isStarted()) {
+            factory.start();
+            log.info("Temporal Worker Factory started!");
+        }
     }
 
     public Worker getWorker(String taskQueueName) {
+        startFactoryIfNot(factory);
         return temporalWorkerMap.get(taskQueueName);
     }
 }

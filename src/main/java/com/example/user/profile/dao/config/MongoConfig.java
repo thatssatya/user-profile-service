@@ -1,4 +1,4 @@
-package com.example.user.profile.config;
+package com.example.user.profile.dao.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
