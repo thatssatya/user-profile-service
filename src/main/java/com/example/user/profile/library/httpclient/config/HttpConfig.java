@@ -1,4 +1,4 @@
-package com.example.user.profile.httpclient.config;
+package com.example.user.profile.library.httpclient.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

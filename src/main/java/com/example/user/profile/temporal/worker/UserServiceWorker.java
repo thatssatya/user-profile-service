@@ -1,8 +1,9 @@
-package com.example.user.profile.temporal.worker.impl;
+package com.example.user.profile.temporal.worker;
 
 import com.example.user.profile.constants.TaskQueue;
+import com.example.user.profile.library.temporal.client.TemporalClient;
+import com.example.user.profile.library.temporal.worker.impl.AbstractTemporalWorker;
 import com.example.user.profile.service.UserService;
-import com.example.user.profile.temporal.TemporalClient;
 import com.example.user.profile.temporal.workflow.CreateUserWorkflow;
 import com.example.user.profile.temporal.workflow.impl.BaseCreateUserWorkflow;
 import io.temporal.client.WorkflowOptions;
@@ -20,7 +21,6 @@ public class UserServiceWorker extends AbstractTemporalWorker {
                 TaskQueue.CREATE_USER,
                 Set.of(userService),
                 Map.of(CreateUserWorkflow.class, WorkflowOptions.newBuilder()
-                        .setTaskQueue(TaskQueue.CREATE_USER)
                         .setWorkflowId(String.format("CREATE_USER_WORKFLOW-%s", UUID.randomUUID()))
                         .build()),
                 temporalClient);

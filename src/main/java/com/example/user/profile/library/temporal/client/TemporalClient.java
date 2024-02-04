@@ -1,4 +1,4 @@
-package com.example.user.profile.temporal;
+package com.example.user.profile.library.temporal.client;
 
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;

@@ -1,4 +1,4 @@
-package com.example.user.profile.httpclient.request;
+package com.example.user.profile.library.httpclient.request;
 
 import lombok.Builder;
 import lombok.Getter;

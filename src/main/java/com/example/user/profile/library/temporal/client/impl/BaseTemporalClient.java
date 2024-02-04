@@ -1,6 +1,6 @@
-package com.example.user.profile.temporal.impl;
+package com.example.user.profile.library.temporal.client.impl;
 
-import com.example.user.profile.temporal.TemporalClient;
+import com.example.user.profile.library.temporal.client.TemporalClient;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import lombok.RequiredArgsConstructor;

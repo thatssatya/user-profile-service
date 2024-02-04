@@ -1,9 +1,9 @@
 package com.example.user.profile.controller;
 
+import com.example.user.profile.library.temporal.TemporalService;
 import com.example.user.profile.model.request.CreateUserRequest;
 import com.example.user.profile.model.response.UserResponse;
 import com.example.user.profile.service.UserService;
-import com.example.user.profile.temporal.worker.factory.TemporalWorkerFactory;
 import com.example.user.profile.temporal.workflow.CreateUserWorkflow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +23,7 @@ import static com.example.user.profile.controller.mapper.UserServiceRequestMappe
 public class UserController {
 
     private final UserService userService;
-    private final TemporalWorkerFactory temporalWorkerFactory;
-
-    private CreateUserWorkflow createUserWorkflow() {
-        return temporalWorkerFactory.getWorker("userServiceWorker").newWorkflow(CreateUserWorkflow.class);
-    }
+    private final TemporalService temporalService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getUser(@NotBlank @PathVariable("userId") String userId) {
@@ -48,5 +44,9 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(USER_RESPONSE_MAPPER.from(user));
+    }
+
+    private CreateUserWorkflow createUserWorkflow() {
+        return temporalService.newWorkflow(CreateUserWorkflow.class);
     }
 }
