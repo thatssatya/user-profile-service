@@ -1,0 +1,14 @@
+server:
+  port: 8082
+
+temporal-config:
+  host: ${temporal.host}
+  port: ${temporal.port}
+
+mongo-config:
+  protocol: ${mongo.protocol}
+  database: ${mongo.database}
+  password: ${mongo.password}
+  host: ${mongo.host}
+  props: ${mongo.props}
+  indexKey: ${mongo.indexKey}
