@@ -1,9 +1,9 @@
-package com.example.user.profile.library.httpclient.impl;
+package com.example.user.profile.library.http.client.impl;
 
 import com.example.user.profile.exception.UserProfileException;
-import com.example.user.profile.library.httpclient.HttpClient;
-import com.example.user.profile.library.httpclient.config.HttpConfig;
-import com.example.user.profile.library.httpclient.request.ApiRequest;
+import com.example.user.profile.library.http.client.HttpClient;
+import com.example.user.profile.library.http.config.HttpConfig;
+import com.example.user.profile.library.http.request.ApiRequest;
 import com.example.user.profile.model.Error;
 import com.example.user.profile.util.SerializationUtil;
 import lombok.RequiredArgsConstructor;

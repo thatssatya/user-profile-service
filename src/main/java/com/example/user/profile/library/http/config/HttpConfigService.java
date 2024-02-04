@@ -1,4 +1,4 @@
-package com.example.user.profile.library.httpclient.config;
+package com.example.user.profile.library.http.config;
 
 import java.util.Map;
 
