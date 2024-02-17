@@ -12,7 +12,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TemporalService {
+public class TemporalWorkflowFactory {
     private final Map<Class<? extends TemporalWorkflow>, ? extends Worker> workerMap;
     private final WorkerConfig workerConfig;
 

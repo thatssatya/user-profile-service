@@ -1,6 +1,6 @@
 package com.example.user.profile.controller;
 
-import com.example.user.profile.library.temporal.TemporalService;
+import com.example.user.profile.library.temporal.TemporalWorkflowFactory;
 import com.example.user.profile.model.request.CreateUserRequest;
 import com.example.user.profile.model.response.UserResponse;
 import com.example.user.profile.service.UserService;
@@ -23,7 +23,7 @@ import static com.example.user.profile.controller.mapper.UserServiceRequestMappe
 public class UserController {
 
     private final UserService userService;
-    private final TemporalService temporalService;
+    private final TemporalWorkflowFactory temporalWorkflowFactory;
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getUser(@NotBlank @PathVariable("userId") String userId) {
@@ -47,6 +47,6 @@ public class UserController {
     }
 
     private CreateUserWorkflow createUserWorkflow() {
-        return temporalService.newWorkflow(CreateUserWorkflow.class);
+        return temporalWorkflowFactory.newWorkflow(CreateUserWorkflow.class);
     }
 }
