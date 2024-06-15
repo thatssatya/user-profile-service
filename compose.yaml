@@ -17,15 +17,15 @@ services:
     ports:
       - 8080:8082
     networks:
-      - temporal-network
+      - very-secure-network
     develop:
       watch:
         - path: ./src
           action: sync
 networks:
-  temporal-network:
+  very-secure-network:
     driver: bridge
-    name: temporal-network
+    name: very-secure-network
     external: true
 
     # The commented out section below is an example of how to define a PostgreSQL
