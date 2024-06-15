@@ -1,10 +1,10 @@
 package com.example.user.profile.library.http.client.impl;
 
+import com.example.user.profile.exception.InternalServerException;
 import com.example.user.profile.exception.UserProfileException;
 import com.example.user.profile.library.http.client.HttpClient;
 import com.example.user.profile.library.http.config.HttpConfig;
 import com.example.user.profile.library.http.request.ApiRequest;
-import com.example.user.profile.model.Error;
 import com.example.user.profile.util.SerializationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +26,18 @@ public class DefaultHttpClient implements HttpClient {
     @Override
     public <T> T execute(ApiRequest request, Class<T> responseCls) {
         try {
-            log.info("Sending http request...");
+            log.info("Thread: {}", Thread.currentThread());
+            var httpRequest = buildHttpRequest(request);
+            log.info("Executing {} request to : {}", httpRequest.method(), httpRequest.uri());
             var response = client.send(buildHttpRequest(request), HttpResponse.BodyHandlers.ofString());
 
-            log.info("Response received: {}", response.body());
+            log.info("Response received with status: {} and body: {}", response.statusCode(), response.body());
             return deserializedResponse(responseCls, response.body());
         } catch (UserProfileException exception) {
             throw exception;
         } catch (Exception exception) {
             log.error("Exception occurred while executing api request: ", exception);
-            throw UserProfileException.fromErrorCode(Error.INTERNAL_SERVER_ERROR);
+            throw InternalServerException.build();
         }
     }
 
@@ -46,7 +48,9 @@ public class DefaultHttpClient implements HttpClient {
     private HttpRequest buildHttpRequest(ApiRequest request) {
         var builder = HttpRequest
                 .newBuilder(URI.create(buildUrl(request)))
-                .header("Content-Type", "application/json");
+                .header("Content-Type", request.getContentType())
+                .header("Origin", request.getOrigin())
+                .header("Authorization", request.getAuthorization());
 
         if (isPostApi(request)) {
             builder = builder.POST(HttpRequest.BodyPublishers.ofString(serializedRequestBody(request.getBody())));
@@ -81,9 +85,6 @@ public class DefaultHttpClient implements HttpClient {
         var protocol = buildProtocol(request);
         var baseUrl = httpConfig.getServiceConfig(request.getService()).getBaseUrl();
         var api = httpConfig.getServiceConfig(request.getService()).getApiConfig(request.getApi()).getPath();
-
-        log.info(protocol, baseUrl, api);
-
         return String.format("%s%s%s", protocol, baseUrl, api);
     }
 

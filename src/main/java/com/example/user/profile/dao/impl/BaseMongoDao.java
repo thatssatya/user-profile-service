@@ -4,8 +4,9 @@ import com.example.user.profile.dao.MongoDao;
 import com.example.user.profile.dao.config.MongoConfig;
 import com.example.user.profile.dao.request.MongoBaseRequest;
 import com.example.user.profile.dao.request.MongoInsertOrUpdateRequest;
-import com.example.user.profile.exception.UserProfileException;
-import com.example.user.profile.model.Error;
+import com.example.user.profile.exception.DatabaseFetchException;
+import com.example.user.profile.exception.DatabaseInsertException;
+import com.example.user.profile.exception.InternalServerException;
 import com.example.user.profile.util.SerializationUtil;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
@@ -49,10 +50,10 @@ public abstract class BaseMongoDao<K, V> implements MongoDao<K, V> {
             return SerializationUtil.convertToEntity(entity, vClass);
         } catch (MongoException exception) {
             log.error("Mongo Exception: {}", exception.getMessage());
-            throw UserProfileException.fromErrorCode(Error.DB_FETCH_ERROR);
+            throw DatabaseFetchException.build();
         } catch (Exception exception) {
             log.error("Exception: {}", exception.getMessage());
-            throw UserProfileException.fromErrorCode(Error.INTERNAL_SERVER_ERROR);
+            throw InternalServerException.build();
         }
     }
 
@@ -66,10 +67,10 @@ public abstract class BaseMongoDao<K, V> implements MongoDao<K, V> {
             log.info("DB insert succeeded!");
         } catch (MongoException exception) {
             log.error("Mongo Exception: {}", exception.getMessage());
-            throw UserProfileException.fromErrorCode(Error.DB_INSERTION_ERROR);
+            throw DatabaseInsertException.build();
         } catch (Exception exception) {
             log.error("Exception: {}", exception.getMessage());
-            throw UserProfileException.fromErrorCode(Error.INTERNAL_SERVER_ERROR);
+            throw InternalServerException.build();
         }
     }
 

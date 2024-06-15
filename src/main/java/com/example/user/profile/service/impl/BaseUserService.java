@@ -5,8 +5,7 @@ import com.example.user.profile.dao.entity.User;
 import com.example.user.profile.dao.impl.UserMongoDao;
 import com.example.user.profile.dao.request.MongoBaseRequest;
 import com.example.user.profile.dao.request.MongoInsertOrUpdateRequest;
-import com.example.user.profile.exception.UserProfileException;
-import com.example.user.profile.model.Error;
+import com.example.user.profile.exception.UserNotFoundException;
 import com.example.user.profile.service.UserService;
 import com.example.user.profile.service.request.CreateUserServiceRequest;
 import com.example.user.profile.service.request.UserServiceRequest;
@@ -30,7 +29,7 @@ public class BaseUserService implements UserService {
                 .build());
 
         return Objects.requireNonNullElseGet(user, () -> {
-            throw UserProfileException.fromErrorCode(Error.USER_NOT_EXISTS);
+            throw UserNotFoundException.build();
         });
     }
 

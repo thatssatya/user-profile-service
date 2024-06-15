@@ -17,12 +17,12 @@ import java.util.UUID;
 public class UserServiceWorker extends AbstractTemporalWorker {
 
     public UserServiceWorker(TemporalClient temporalClient, UserService userService) {
-        super(Set.of(BaseCreateUserWorkflow.class),
+        super(BaseCreateUserWorkflow.class,
                 TaskQueue.CREATE_USER,
-                Set.of(userService),
-                Map.of(CreateUserWorkflow.class, WorkflowOptions.newBuilder()
+                userService,
+                WorkflowOptions.newBuilder()
                         .setWorkflowId(String.format("CREATE_USER_WORKFLOW-%s", UUID.randomUUID()))
-                        .build()),
+                        .build(),
                 temporalClient);
     }
 

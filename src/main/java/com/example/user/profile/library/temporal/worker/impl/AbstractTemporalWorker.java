@@ -6,6 +6,7 @@ import com.example.user.profile.library.temporal.worker.Worker;
 import com.example.user.profile.library.temporal.workflow.TemporalWorkflow;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.common.RetryOptions;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -13,13 +14,25 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractTemporalWorker implements Worker {
     private final Set<Class<? extends TemporalWorkflow>> WORKFLOW_IMPL_CLASSES;
     private final String TASK_QUEUE;
     private final Set<? extends TemporalActivity> ACTIVITY_IMPLEMENTATIONS;
     private final Map<Class<? extends TemporalWorkflow>, WorkflowOptions> WORKFLOW_OPTIONS_MAP;
     protected final TemporalClient temporalClient;
+
+    protected AbstractTemporalWorker(Class<? extends TemporalWorkflow> workFlowImplClass,
+                                     String taskQueue,
+                                     TemporalActivity activityImplClass,
+                                     WorkflowOptions workflowOptions,
+                                     TemporalClient temporalClient) {
+        this(Set.of(workFlowImplClass),
+                taskQueue,
+                Set.of(activityImplClass),
+                Map.of((Class<? extends TemporalWorkflow>) (workFlowImplClass.getGenericInterfaces()[0]), workflowOptions),
+                temporalClient);
+    }
 
     @Override
     public String getTaskQueue() {

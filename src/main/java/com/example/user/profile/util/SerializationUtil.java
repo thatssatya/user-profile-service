@@ -1,7 +1,6 @@
 package com.example.user.profile.util;
 
-import com.example.user.profile.exception.UserProfileException;
-import com.example.user.profile.model.Error;
+import com.example.user.profile.exception.SerializationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -22,7 +21,7 @@ public class SerializationUtil {
             return object instanceof String string ? string : objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
-            throw UserProfileException.fromErrorCode(Error.SERIALIZATION_ERROR);
+            throw SerializationException.build();
         }
     }
 
@@ -39,7 +38,7 @@ public class SerializationUtil {
             return objectMapper.readValue(convertToString(object), cls);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
-            throw UserProfileException.fromErrorCode(Error.SERIALIZATION_ERROR);
+            throw SerializationException.build();
         }
     }
 
