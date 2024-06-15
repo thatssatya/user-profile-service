@@ -8,12 +8,14 @@ import org.springframework.http.HttpMethod;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Configuration
 @ConfigurationProperties(prefix = "http-config")
 @Data
 public class HttpConfig {
+    private Boolean enableAsync;
     private Map<String, ServiceConfig> serviceConfigs;
 
     @Autowired
@@ -21,6 +23,10 @@ public class HttpConfig {
         serviceConfigs = httpConfigServices.stream()
                 .flatMap(httpConfigService -> httpConfigService.getConfig().entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public boolean asyncEnabled() {
+        return Objects.requireNonNullElse(enableAsync, Boolean.FALSE);
     }
 
     public ServiceConfig getServiceConfig(String service) {
