@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+temporal-config:
+  host: ${temporal.host}
+  port: ${temporal.port}
+
+
+http-config:
+  enableAsync: 'true'
+  serviceConfigs:
+    aiService:
+      baseUrl: ${aiService.baseUrl}
+      secured: true
+      apiConfigs:
+        chat:
+          path: '/chat'
+          method: 'POST'
+
+ai-client-config:
+  origin: ${aiClientConfig.origin}
+  authorization: ${aiClientConfig.authorization}
